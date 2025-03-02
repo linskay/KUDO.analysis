@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+</head>
+<ul>
+    <div class="card">
+        <div class="card-body">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% if user.img %}
+                <img src="{{ user.img.url }}" class="card-img-top w-25" alt="404 not found">
+            {% else %}
+                <p>Изображение недоступно</p>
+            {% endif %}
+            <li class="list-group-item">Имя: {{ user.first_name }}</li>
+            <li class="list-group-item">Фамилия: {{ user.last_name }}</li>
+            <li class="list-group-item">Отчество: {{ user.surname }}</li>
+            <li class="list-group-item">Номер телефона: {{ user.phone_number }}</li>
+            <a href="{% url 'users:user_edit' users.pk %}" class="btn btn-secondary">Редактировать</a>
+            <a href="" class="btn btn-danger">Удалить</a>
+        </div>
+    </div>
+</ul>
