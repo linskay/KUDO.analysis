@@ -10,7 +10,7 @@ class UserInfo(models.Model):
     """
     Модель для странички в личном кабинете
     """
-    id = models.AutoField(primary_key=True, verbose_name='id')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, relaited_name='userinfo', verbose_name='id')
     first_name = models.CharField(max_length=30, verbose_name='Имя')
     last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     surname = models.CharField(max_length=30, verbose_name='Отчество')
