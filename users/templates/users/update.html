@@ -11,10 +11,10 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <a href="{% url 'users:user_detail' users.pk %}">
+            <a href="{% url 'users:user_detail' pk=1 %}">
                 <button type="submit" class="btn btn-dark">Сохранить</button>
             </a>
-            <a href="{% url 'users:user_detail' users.pk %}" class="btn btn-secondary">Отмена</a>
+            <a href="{% url 'users:user_detail' pk=1 %}" class="btn btn-secondary">Отмена</a>
         </form>
     </div>
     <script src="/static/js/bootstrap.bundle.min.js"></script>

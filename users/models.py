@@ -10,7 +10,8 @@ class UserInfo(models.Model):
     """
     Модель для странички в личном кабинете
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, relaited_name='userinfo', verbose_name='id')
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='id')
+    id = models.AutoField(primary_key=True, verbose_name='id')
     first_name = models.CharField(max_length=30, verbose_name='Имя')
     last_name = models.CharField(max_length=30, verbose_name='Фамилия')
     surname = models.CharField(max_length=30, verbose_name='Отчество')
@@ -21,6 +22,9 @@ class UserInfo(models.Model):
     img = models.ImageField(upload_to='media/img/', default='404 error', verbose_name='Изображение')
 
     def __str__(self):
+        """
+        строчное отображение модели
+        """
         return self.email
 
     class Meta:

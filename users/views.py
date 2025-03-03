@@ -7,6 +7,9 @@ from .models import UserInfo
 
 
 class UserInfoDeleteView(DeleteView):
+    """
+    Класс контроллер для удаления всей информации о пользователе из лк (пока всей)
+    """
     model = UserInfo
     template_name = 'users/confirm_delete.html'
     success_url = reverse_lazy('user_detail')
@@ -16,6 +19,9 @@ class UserInfoDeleteView(DeleteView):
 
 
 class UserInfoUpdateView(UpdateView):
+    """
+    Класс контроллер для добавления информации в пустое (редактировании уже созданной инфы) о пользователе
+    """
     model = UserInfo
     form_class = UserInfoForm
     template_name = 'users/update.html'
@@ -26,8 +32,11 @@ class UserInfoUpdateView(UpdateView):
 
 
 class UserInfoDetailView(DetailView):
+    """
+    класс контроллер для отображения странички с информацией о пользователе
+    """
     model = UserInfo
-    template_name = 'user_detail.html'
+    template_name = 'users/user_detail.html'
     success_url = reverse_lazy('user_detail')
 
     def get_success_url(self):
