@@ -1,4 +1,3 @@
-from django.contrib import admin
 
 from users.models import User
 
@@ -9,3 +8,4 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ("id", "email",)
     list_filter = ("is_active",)
     search_fields = ("email",)
+
