@@ -37,26 +37,32 @@
         <div class="card rounded-4 position-relative">
           <div class="card-body">
             <div class="m-sm-3">
-              <h3 class="text-center">Регистрация</h3>
-              <form>
-                <div class="mb-3">
-                  <input class="form-control form-control-lg" type="email" name="email" placeholder="Введите email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required/>
-                </div>
-                <div class="mb-3">
-                  <input class="form-control form-control-lg" type="password" name="password" placeholder="Введите пароль" />
-                </div>
-                <div class="mb-3">
-                  <input class="form-control form-control-lg" type="password" name="repeat_password" placeholder="Повторите пароль" />
-                </div>
+              <h3 class="text-center">Вход</h3>
+									<form>
+										<div class="mb-3">
+											<input class="form-control form-control-lg" type="email" name="email" placeholder="Введите Email" />
+										</div>
+										<div class="mb-3">
+											<input class="form-control form-control-lg" type="password" name="password" placeholder="Введите пароль" />
+										</div>
+										<div>
+											<div class="form-check align-items-center">
+												<input id="customControlInline" type="checkbox" class="form-check-input" value="remember-me" name="remember-me" checked>
+												<label class="form-check-label text-small" for="customControlInline">Запомнить пароль</label>
+											</div>
+										</div>
                 <div class="d-grid gap-2 mt-3">
-                    <input type="submit" class="btn btn-lg btn-primary" value="Сохранить">
+                    <input type="submit" class="btn btn-lg btn-primary" value="Войти">
                 </div>
-              </form>
+									</form>
             </div>
           </div>
         </div>
         <div class="text-center mt-2 mb-3">
           Есть аккаунт? <a href="#">Войти</a>
+        </div>
+        <div class="text-center mt-2 mb-3">
+         Забыли пароль? <a href="#">Напомнить</a>
         </div>
       </div>
     </div>
