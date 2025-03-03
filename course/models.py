@@ -27,7 +27,7 @@ class Course(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания курса")
     update_date = models.DateTimeField(auto_now=True, verbose_name="Дата изменения курса")
     photo_course = models.ImageField(upload_to='courses_photos/', verbose_name="Фото превью")
-    video_course  = models.CharField(max_length=250, verbose_name="Виедео превью")
+    video_course  = models.CharField(max_length=250, verbose_name="Видео превью")
     teacher = models.ManyToManyField(User, related_name="teacher")
     pay_course = models.BooleanField(default=False)
     students = models.ManyToManyField(User, through="CourseAndStudents", related_name="students")
@@ -38,7 +38,7 @@ class Course(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
-        ordering = ['name_course_category']
+        ordering = ['name_course']
 
 
 class CourseAndStudents(models.Model):
