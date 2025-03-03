@@ -1,6 +1,14 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import DetailView, DeleteView, UpdateView
+import secrets
+
+from django.conf.global_settings import EMAIL_HOST_USER
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+
+from users.forms import UserRegisterForm
+from users.models import User
 
 from .forms import UserInfoForm
 from .models import UserInfo
@@ -10,60 +18,52 @@ class UserInfoDeleteView(DeleteView):
     """
     Класс контроллер для удаления всей информации о пользователе из лк (пока всей)
     """
+
     model = UserInfo
-    template_name = 'users/confirm_delete.html'
-    success_url = reverse_lazy('user_detail')
+    template_name = "users/confirm_delete.html"
+    success_url = reverse_lazy("user_detail")
 
     def get_success_url(self):
-        return reverse_lazy('users:user_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy("users:user_detail", kwargs={"pk": self.object.pk})
 
 
 class UserInfoUpdateView(UpdateView):
     """
     Класс контроллер для добавления информации в пустое (редактировании уже созданной инфы) о пользователе
     """
+
     model = UserInfo
     form_class = UserInfoForm
-    template_name = 'users/update.html'
-    success_url = reverse_lazy('user_detail')
+    template_name = "users/update.html"
+    success_url = reverse_lazy("user_detail")
 
     def get_success_url(self):
-        return reverse_lazy('users:user_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy("users:user_detail", kwargs={"pk": self.object.pk})
 
 
 class UserInfoDetailView(DetailView):
     """
-    класс контроллер для отображения странички с информацией о пользователе
+    Класс контроллер для отображения странички с информацией о пользователе
     """
+
     model = UserInfo
-    template_name = 'users/user_detail.html'
-    success_url = reverse_lazy('user_detail')
+    template_name = "users/user_detail.html"
+    success_url = reverse_lazy("user_detail")
 
     def get_success_url(self):
-        return reverse_lazy('users:user_detail', kwargs={'pk': self.object.pk})
-
-import secrets
-
-from django.conf.global_settings import EMAIL_HOST_USER
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, redirect
-
-from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
-
-from users.forms import UserRegisterForm
-from users.models import User
+        return reverse_lazy("users:user_detail", kwargs={"pk": self.object.pk})
 
 
 class UserRegisterView(CreateView):
-    """ Представление для регистрации нового пользователя.
+    """Представление для регистрации нового пользователя.
         Методы:
     - form_valid: Обрабатывает данные формы, создает пользователя, генерирует токен
       для подтверждения email и отправляет ссылку для подтверждения.
     """
+
     model = User
     form_class = UserRegisterForm
+# Заменить на файл, который будет регистрацию выдавать
     template_name = "users/register.html"
     success_url = reverse_lazy("users:login")
 
@@ -88,7 +88,7 @@ class UserRegisterView(CreateView):
 
 
 def email_verification(request, token):
-    """ Подтверждение email пользователя по токену """
+    """Подтверждение email пользователя по токену"""
     user = get_object_or_404(User, token=token)
 
     if user.is_token_used:
@@ -104,4 +104,3 @@ def email_verification(request, token):
     user.save()
 
     return redirect(reverse("users:login"))
-
