@@ -1,0 +1,11 @@
+<form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a href="{% url 'courses:courses' %}" class="btn btn-secondary">Отмена</a>
+                {% if course.pk %}
+                <a class="btn btn-danger" href="{% url 'courses:courses_delete' course.pk %} ">Удалить</a>
+                {% endif %}
+</form>

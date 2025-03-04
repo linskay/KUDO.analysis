@@ -1,0 +1,9 @@
+{{ course.pk}}
+{{ course.name_course}}
+{{ course.description_course}}
+{{ course.creation_date}}
+{{ course.update_date}}
+{{ course.photo_course}}
+{{ course.pay_course}}
+{{ course.students}}
+ <a href="{% url 'courses:courses_update' course.pk %}" class="btn btn-secondary">Изменить</a>
