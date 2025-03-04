@@ -35,7 +35,9 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractUser):
-    """Создание пользователя"""
+    """ Модель для создания и управления пользователями в базе данных через ORM.
+    Использует email в качестве уникального идентификатора вместо username.
+    """
 
     username = None
     email = models.EmailField(
@@ -44,7 +46,7 @@ class User(AbstractUser):
     token = models.CharField(
         max_length=100, verbose_name="Token", blank=True, null=True
     )
-    is_token_used = models.BooleanField(default=False, verbose_name="Токен использован")
+    is_token_used = models.BooleanField(default=False, verbose_name="Статус использования токена")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
