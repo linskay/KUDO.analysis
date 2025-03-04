@@ -12,16 +12,12 @@ class CoursesListView(ListView):
     context_object_name = 'courses'
     paginate_by = 12
     template_name = os.path.join('courses', 'courses_list.html')
-    extra_context = {"active_menu": "client"}
+    extra_context = {"active_menu": "client", "xxx": "Назначенные курсы"}
 
-    def get_queryset(self):
-        #print(self.object.students)
-        #return super().get_queryset().filter(students=self.request.user, courseandstudents__user__lte=1)
-        #return Course.objects.filter(courseandstudents__user=self.request.user)
-        return Course.objects.filter(courseandstudents__finish_date=self.request.user)
-
-
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['courses'] = Course.objects.filter(courseandstudents__user_id=self.request.user.pk).exclude(courseandstudents__finish_date=None)
+        return context
 
 
 class CoursesListAllView(ListView):
@@ -29,8 +25,20 @@ class CoursesListAllView(ListView):
     context_object_name = 'courses'
     paginate_by = 12
     template_name = os.path.join('courses', 'courses_list.html')
-    extra_context = {"active_menu": "client"}
+    extra_context = {"active_menu": "client", "xxx": "все курсы"}
 
+
+class CoursesListCompleteView(ListView):
+    model = Course
+    context_object_name = 'courses'
+    paginate_by = 12
+    template_name = os.path.join('courses', 'courses_list.html')
+    extra_context = {"active_menu": "client", "xxx": "выполненые курсы"}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['courses'] = Course.objects.filter(courseandstudents__user_id=self.request.user.pk, courseandstudents__finish_date=None)
+        return context
 
 class CoursesDetailView(DetailView):
     model = Course
