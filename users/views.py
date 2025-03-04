@@ -2,13 +2,15 @@ import secrets
 
 from django.conf.global_settings import EMAIL_HOST_USER
 from django.contrib import messages
+from django.contrib.auth.models import Group
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from users.forms import UserRegisterForm, UserInfoForm
 from users.models import User, UserInfo
+from users.services.user_service import UserService
 
 
 class UserRegisterView(CreateView):
@@ -25,42 +27,23 @@ class UserRegisterView(CreateView):
     success_url = reverse_lazy("users:login")
 
     def form_valid(self, form):
-        user = form.save()
-        user.is_active = False
-        token = secrets.token_hex(16)
-        user.token = token
-        user.is_token_used = False
-        user.save()
-        host = self.request.get_host()
-        url = f"http://{host}/users/email-confirm/{token}/"
-        print(f"Ссылка для подтверждения почты: {url}")
-        # send_mail(
-        #     subject="Подтверждение почты",
-        #     message=f"Переход по ссылке для подтверждения почты {url}",
-        #     from_email=EMAIL_HOST_USER,
-        #     recipient_list=[user.email],
-        # )
+        # Создаем пользователя через сервис c логикой присвоение группы "User" и создание связанного класса UserInfo
+        user = UserService.create_user(form)
+
+        # Создаем URL для подтверждения email
+        url = UserService.generate_confirmation_url(self.request, user.token)
+
+        # Отправляем email для подтверждения
+        UserService.send_confirmation_email(user, url)
 
         return super().form_valid(form)
 
 
 def email_verification(request, token):
     """Подтверждение email пользователя по токену"""
-    user = get_object_or_404(User, token=token)
+    result = UserService.email_verification_service(token)
 
-    if user.is_token_used:
-        messages.error(request, "Ссылка уже была использована")
-        return redirect(reverse("users:login"))
-
-    if user.is_active:
-        messages.warning(request, "Ваш аккаунт уже активирован")
-        return redirect(reverse("users:login"))
-
-    user.is_active = True
-    user.is_token_used = True
-    user.save()
-
-    return redirect(reverse("users:login"))
+    return render(request, "users/email_verification.html", {"message": result["message"]})
 
 
 class UserInfoUpdateView(UpdateView):
