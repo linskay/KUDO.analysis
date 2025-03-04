@@ -1,0 +1,13 @@
+
+ {% include 'pagination.html' %}
+                            {% for course in courses %}
+
+                                <p><a href="{% url 'courses:courses_detail' course.pk %}">{{ course.name_course }}</a></p>
+                                <p>{{ course.description_course }}</p>
+
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <a class="btn btn-primary" href="{% url 'courses:courses_create' %} ">Добавить </a>
