@@ -13,8 +13,3 @@ class UserAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_active",)
     search_fields = ("email",)
-
-from django.contrib.auth.models import Group
-
-
-Group.objects.get_or_create(name='User')
