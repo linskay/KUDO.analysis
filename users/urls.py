@@ -4,7 +4,7 @@ from django.urls import path
 
 from users.apps import UsersConfig
 from users.forms import CustomLoginForm
-from users.views import UserRegisterView
+from users.views import UserRegisterView, email_verification
 
 from .views import UserInfoDeleteView, UserInfoDetailView, UserInfoUpdateView
 
@@ -17,6 +17,7 @@ urlpatterns = [
         LoginView.as_view(template_name="users/login.html", form_class=CustomLoginForm),
         name="login",
     ),
+    path("email-confirm/<str:token>/", email_verification, name="email_confirm"),
     path("logout/", LogoutView.as_view(template_name="home.html"), name="logout"),
     path("user_detail/<int:pk>/", UserInfoDetailView.as_view(), name="user_detail"),
     path("user/<int:pk>/edit/", UserInfoUpdateView.as_view(), name="user_edit"),
