@@ -15,9 +15,6 @@ class CustomUserManager(UserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-        # Присваиваем пользователю группу User
-        user_group = Group.objects.get(name="User")
-        user.groups.add(user_group)
 
         return user
 
@@ -66,23 +63,23 @@ class UserInfo(models.Model):
     Модель для странички в личном кабинете
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=30, verbose_name='Имя')
-    last_name = models.CharField(max_length=30, verbose_name='Фамилия')
-    surname = models.CharField(max_length=30, verbose_name="Отчество")
-    email = models.EmailField(unique=True, verbose_name="Email", help_text="Введите email")
-    registration_date = models.DateField(verbose_name="Дата регистрации")
-    birth_date = models.DateField(verbose_name="Дата рождения")
+    first_name = models.CharField(max_length=30, blank=True, null=True, verbose_name='Имя')
+    last_name = models.CharField(max_length=30, blank=True, null=True, verbose_name='Фамилия')
+    surname = models.CharField(max_length=30, blank=True, null=True, verbose_name="Отчество")
+    email = models.EmailField(unique=True, blank=True, null=True, verbose_name="Email", help_text="Введите email")
+    registration_date = models.DateField(auto_now_add=True, verbose_name="Дата регистрации")
+    birth_date = models.DateField(blank=True, null=True, verbose_name="Дата рождения")
     phone_number = models.CharField(
         max_length=15, blank=True, null=True, verbose_name="Номер телефона"
     )
     img = models.ImageField(
-        upload_to="media/img/", default="404 error", verbose_name="Изображение"
+        upload_to="media/img/", blank=True, null=True, default="404 error", verbose_name="Изображение"
     )
 
     def __str__(self):
-        return self.email
+        return f'Пользователь с id - {str(self.user.id)}'
 
     class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
+        verbose_name = "Пользователь Инфо"
+        verbose_name_plural = "Пользователи Инфо"
 
