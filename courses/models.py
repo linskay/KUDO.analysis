@@ -44,8 +44,8 @@ class Course(models.Model):
 class CourseAndStudents(models.Model):
     """ Связующая таблица для связки Курсы - Студенты"""
     id = models.AutoField(primary_key=True, verbose_name="id")
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name="user")
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="course")
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, )
     course_completion = models.IntegerField(default=0, verbose_name="процент завершения курса")
     finish_date = models.DateTimeField(default=None, null=True, blank=True, verbose_name="Дата окончания курса")
 

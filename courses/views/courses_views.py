@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
-from ..models import Course
+from ..models import Course, CourseAndStudents, User
 from django.views.generic import ListView, DetailView
 from ..forms import CoursesForm
 
@@ -12,8 +12,33 @@ class CoursesListView(ListView):
     context_object_name = 'courses'
     paginate_by = 12
     template_name = os.path.join('courses', 'courses_list.html')
-    extra_context = {"active_menu": "client"}
+    extra_context = {"active_menu": "client", "xxx": "Назначенные курсы"}
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['courses'] = Course.objects.filter(courseandstudents__user_id=self.request.user.pk).exclude(courseandstudents__finish_date=None)
+        return context
+
+
+class CoursesListAllView(ListView):
+    model = Course
+    context_object_name = 'courses'
+    paginate_by = 12
+    template_name = os.path.join('courses', 'courses_list.html')
+    extra_context = {"active_menu": "client", "xxx": "все курсы"}
+
+
+class CoursesListCompleteView(ListView):
+    model = Course
+    context_object_name = 'courses'
+    paginate_by = 12
+    template_name = os.path.join('courses', 'courses_list.html')
+    extra_context = {"active_menu": "client", "xxx": "выполненые курсы"}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['courses'] = Course.objects.filter(courseandstudents__user_id=self.request.user.pk, courseandstudents__finish_date=None)
+        return context
 
 class CoursesDetailView(DetailView):
     model = Course
