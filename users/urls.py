@@ -11,7 +11,6 @@ from .views import UserInfoDeleteView, UserInfoDetailView, UserInfoUpdateView
 app_name = UsersConfig.name
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
     path("register/", UserRegisterView.as_view(), name="register"),
     path(
         "login/",

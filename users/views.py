@@ -7,11 +7,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
-from users.forms import UserRegisterForm
-from users.models import User
-
-from .forms import UserInfoForm
-from .models import UserInfo
+from users.forms import UserRegisterForm, UserInfoForm
+from users.models import User, UserInfo
 
 
 class UserInfoDeleteView(DeleteView):
