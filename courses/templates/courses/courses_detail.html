@@ -1,9 +1,18 @@
-{{ course.pk}}
-{{ course.name_course}}
-{{ course.description_course}}
-{{ course.creation_date}}
-{{ course.update_date}}
-{{ course.photo_course}}
-{{ course.pay_course}}
-{{ course.students}}
+ <p>{{ course.pk}} </p>
+ <p>{{ course.name_course}} </p>
+ <p>{{ course.description_course}} </p>
+ <p>{{ course.creation_date}} </p>
+ <p>{{ course.update_date}} </p>
+           <p>                      {% if course.photo_course  %}
+                                <img src="{{ MEDIA_URL }}/media/{{ course.photo_course }}" width="150px"/>
+                                {% else %}
+                                нет фото
+                                {% endif %} </p>
+
+ <p>{{ course.pay_course}} </p>
+ {% if course.students  %}
+ <p>{{ course.students}} </p>
+ {% endif %}
  <a href="{% url 'courses:courses_update' course.pk %}" class="btn btn-secondary">Изменить</a>
+
+  <a href="{% url 'courses:courses_delete' course.pk %}" class="btn btn-secondary">Удалить</a>

@@ -30,6 +30,27 @@ class CoursesUpdateView(UpdateView):
     success_url = reverse_lazy('courses:courses')
     #extra_context = {"active_menu": "client"}
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.path_img_temp = None
+        self.photo_course_old = None
+        if self.object.photo_course:
+            # сохраняю путь к старому фото
+            self.path_img_temp = self.object.photo_course.path
+            self.photo_course_old = self.object.photo_course
+
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # Удалить файл картинки
+        if self.photo_course_old:
+            if self.photo_course_old != self.object.photo_course:
+                os.remove(self.path_img_temp)
+
+        #if (not self.object.photo_course and self.path_img_temp) or (self.object.photo_course_old != self.object.photo_course):
+           # os.remove(self.path_img_temp)
+        return super().form_valid(form)
+
 
 class CoursesCreateView(CreateView):
     model = Course
@@ -46,3 +67,10 @@ class CoursesDeleteView(DeleteView):
     success_url = reverse_lazy('courses:courses')
     template_name = os.path.join('courses', 'courses_delete.html')
     extra_context = {"active_menu": "client"}
+
+    def form_valid(self, form):
+        # Удалить файл картинки
+        if self.object.photo_course:
+            path = self.object.photo_course.path
+            os.remove(path)
+        return super().form_valid(form)
