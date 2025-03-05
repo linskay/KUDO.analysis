@@ -1,107 +1,86 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import DetailView, DeleteView, UpdateView
+import secrets
 
-from .forms import UserInfoForm
-from .models import UserInfo
+from django.conf.global_settings import EMAIL_HOST_USER
+from django.contrib import messages
+from django.contrib.auth.models import Group
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+
+from users.forms import UserRegisterForm, UserInfoForm
+from users.models import User, UserInfo
+from users.services.user_service import UserService
 
 
-class UserInfoDeleteView(DeleteView):
+class UserRegisterView(CreateView):
+    """Представление для регистрации нового пользователя.
+        Методы:
+    - form_valid: Обрабатывает данные формы, создает пользователя, генерирует токен
+      для подтверждения email и отправляет ссылку для подтверждения.
     """
-    Класс контроллер для удаления всей информации о пользователе из лк (пока всей)
-    """
-    model = UserInfo
-    template_name = 'users/confirm_delete.html'
-    success_url = reverse_lazy('user_detail')
 
-    def get_success_url(self):
-        return reverse_lazy('users:user_detail', kwargs={'pk': self.object.pk})
+    model = User
+    form_class = UserRegisterForm
+# Заменить на файл, который будет регистрацию выдавать
+    template_name = "users/register.html"
+    success_url = reverse_lazy("users:login")
+
+    def form_valid(self, form):
+        # Создаем пользователя через сервис c логикой присвоение группы "User" и создание связанного класса UserInfo
+        user = UserService.create_user(form)
+
+        # Создаем URL для подтверждения email
+        url = UserService.generate_confirmation_url(self.request, user.token)
+
+        # Отправляем email для подтверждения
+        UserService.send_confirmation_email(user, url)
+
+        return super().form_valid(form)
+
+
+def email_verification(request, token):
+    """Подтверждение email пользователя по токену"""
+    result = UserService.email_verification_service(token)
+
+    return render(request, "users/email_verification.html", {"message": result["message"]})
 
 
 class UserInfoUpdateView(UpdateView):
     """
     Класс контроллер для добавления информации в пустое (редактировании уже созданной инфы) о пользователе
     """
+
     model = UserInfo
     form_class = UserInfoForm
-    template_name = 'users/update.html'
-    success_url = reverse_lazy('user_detail')
+    template_name = "users/update.html"
+    success_url = reverse_lazy("user_detail")
 
     def get_success_url(self):
-        return reverse_lazy('users:user_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy("users:user_detail", kwargs={"pk": self.object.pk})
 
 
 class UserInfoDetailView(DetailView):
     """
-    класс контроллер для отображения странички с информацией о пользователе
+    Класс контроллер для отображения странички с информацией о пользователе
     """
+
     model = UserInfo
-    template_name = 'users/user_detail.html'
-    success_url = reverse_lazy('user_detail')
+    template_name = "users/user_detail.html"
+    success_url = reverse_lazy("user_detail")
 
     def get_success_url(self):
-        return reverse_lazy('users:user_detail', kwargs={'pk': self.object.pk})
-
-import secrets
-
-from django.conf.global_settings import EMAIL_HOST_USER
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, redirect
-
-from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
-
-from users.forms import UserRegisterForm
-from users.models import User
+        return reverse_lazy("users:user_detail", kwargs={"pk": self.object.pk})
 
 
-class UserRegisterView(CreateView):
-    """ Представление для регистрации нового пользователя.
-        Методы:
-    - form_valid: Обрабатывает данные формы, создает пользователя, генерирует токен
-      для подтверждения email и отправляет ссылку для подтверждения.
+class UserInfoDeleteView(DeleteView):
     """
-    model = User
-    form_class = UserRegisterForm
-    template_name = "users/register.html"
-    success_url = reverse_lazy("users:login")
+    Класс контроллер для удаления всей информации о пользователе из лк (пока всей)
+    """
 
-    def form_valid(self, form):
-        user = form.save()
-        user.is_active = False
-        token = secrets.token_hex(16)
-        user.token = token
-        user.is_token_used = False
-        user.save()
-        host = self.request.get_host()
-        url = f"http://{host}/users/email-confirm/{token}/"
-        print(f"Ссылка для подтверждения почты: {url}")
-        # send_mail(
-        #     subject="Подтверждение почты",
-        #     message=f"Переход по ссылке для подтверждения почты {url}",
-        #     from_email=EMAIL_HOST_USER,
-        #     recipient_list=[user.email],
-        # )
+    model = UserInfo
+    template_name = "users/confirm_delete.html"
+    success_url = reverse_lazy("user_detail")
 
-        return super().form_valid(form)
-
-
-def email_verification(request, token):
-    """ Подтверждение email пользователя по токену """
-    user = get_object_or_404(User, token=token)
-
-    if user.is_token_used:
-        messages.error(request, "Ссылка уже была использована")
-        return redirect(reverse("users:login"))
-
-    if user.is_active:
-        messages.warning(request, "Ваш аккаунт уже активирован")
-        return redirect(reverse("users:login"))
-
-    user.is_active = True
-    user.is_token_used = True
-    user.save()
-
-    return redirect(reverse("users:login"))
-
+    def get_success_url(self):
+        return reverse_lazy("users:user_detail", kwargs={"pk": self.object.pk})

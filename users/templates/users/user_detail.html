@@ -8,16 +8,15 @@
 <ul>
     <div class="card">
         <div class="card-body">
-            {% csrf_token %}
-            {{ form.as_p }}
+
             {% if user.img %}
                 <img src="{{ user.img.url }}" class="card-img-top w-25" alt="404 not found">
             {% else %}
                 <p>Изображение недоступно</p>
             {% endif %}
-            <li class="list-group-item">Имя: {{ user.first_name }}</li>
-            <li class="list-group-item">Фамилия: {{ user.last_name }}</li>
-            <li class="list-group-item">Отчество: {{ user.surname }}</li>
+            <li class="list-group-item">Имя: {{ object.first_name }}</li>
+            <li class="list-group-item">Фамилия: {{ object.last_name }}</li>
+            <li class="list-group-item">Отчество: {{ object.surname }}</li>
             <li class="list-group-item">Номер телефона: {{ user.phone_number }}</li>
             <a href="{% url 'users:user_edit' pk=1 %}" class="btn btn-secondary">Редактировать</a>
             <a href="{% url 'users:user_delete' pk=1 %}" class="btn btn-danger">Удалить</a>
