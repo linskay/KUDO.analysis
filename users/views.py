@@ -1,6 +1,6 @@
 import secrets
 
-from django.conf.global_settings import EMAIL_HOST_USER
+# from django.conf.global_settings import EMAIL_HOST_USER
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.core.mail import send_mail
@@ -33,7 +33,7 @@ class UserRegisterView(CreateView):
         url = UserService.generate_confirmation_url(self.request, user.token)
 
         # Отправляем email для подтверждения
-        UserService.send_confirmation_email(user, url)
+        UserService.send_to_console_confirmation_email(user, url)
 
         return super().form_valid(form)
 

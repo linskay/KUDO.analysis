@@ -18,8 +18,8 @@
             <li class="list-group-item">Фамилия: {{ object.last_name }}</li>
             <li class="list-group-item">Отчество: {{ object.surname }}</li>
             <li class="list-group-item">Номер телефона: {{ user.phone_number }}</li>
-            <a href="{% url 'users:user_edit' pk=1 %}" class="btn btn-secondary">Редактировать</a>
-            <a href="{% url 'users:user_delete' pk=1 %}" class="btn btn-danger">Удалить</a>
+            <a href="{% url 'users:user_edit' user.pk %}" class="btn btn-secondary">Редактировать</a>
+            <a href="{% url 'users:user_delete' user.pk %}" class="btn btn-danger">Удалить</a>
         </div>
     </div>
 </ul>

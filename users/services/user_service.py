@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 
-from config.settings import EMAIL_HOST_USER
+# from config.settings import EMAIL_HOST_USER
 from users.models import User, UserInfo
 
 
