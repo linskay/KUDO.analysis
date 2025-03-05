@@ -22,7 +22,6 @@ class UserRegisterView(CreateView):
 
     model = User
     form_class = UserRegisterForm
-# Заменить на файл, который будет регистрацию выдавать
     template_name = "users/register.html"
     success_url = reverse_lazy("users:login")
 
