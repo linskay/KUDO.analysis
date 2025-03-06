@@ -2,7 +2,9 @@
  {% include 'pagination.html' %}
                             {% for course in courses %}
 
-                                <p><a href="{% url 'courses:courses_detail' course.pk %}">{{ course.name_course }}</a></p>
+                                <p><a href="{% url 'courses:courses_detail' course.pk %}">{{ course.name_course }}</a>
+                                    <br/>
+                                    лайков: {{ course.like_counter }}</p>
                                 <p>{{ course.description_course }}</p>
 
 

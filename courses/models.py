@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-
+import datetime
 # Create your models here.
 """class CourseCategory(models.Model):
 
@@ -27,7 +27,8 @@ class Course(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания курса")
     update_date = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="Дата изменения курса")
     photo_course = models.ImageField(upload_to='courses_photos/',  null=True, blank=True, verbose_name="Фото превью")
-    #video_course  = models.CharField(max_length=250, verbose_name="Видео превью")
+    like_counter =models.IntegerField(null=True, blank=True, verbose_name="Лайки")
+
     #teacher = models.ManyToManyField(User, related_name="teacher")
     pay_course = models.BooleanField(default=False,null=True, blank=True,)
     students = models.ManyToManyField(User, blank=True,  through="CourseAndStudents", related_name="students")
@@ -47,7 +48,7 @@ class CourseAndStudents(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, )
     course = models.ForeignKey(Course, on_delete=models.CASCADE, )
     course_completion = models.IntegerField(default=0, verbose_name="процент завершения курса")
-    finish_date = models.DateTimeField(default='1900-01-01 00:00:00',  verbose_name="Дата окончания курса")
+    finish_date = models.DateTimeField(default=datetime.datetime(1900,1,1),  verbose_name="Дата окончания курса")
 
     def __str__(self):
         return f"{self.course} - {self.user}"
