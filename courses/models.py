@@ -47,7 +47,7 @@ class CourseAndStudents(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, )
     course = models.ForeignKey(Course, on_delete=models.CASCADE, )
     course_completion = models.IntegerField(default=0, verbose_name="процент завершения курса")
-    finish_date = models.DateTimeField(default=None, null=True, blank=True, verbose_name="Дата окончания курса")
+    finish_date = models.DateTimeField(default='1900-01-01 00:00:00',  verbose_name="Дата окончания курса")
 
     def __str__(self):
         return f"{self.course} - {self.user}"

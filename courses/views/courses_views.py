@@ -18,7 +18,7 @@ class CoursesListView(ListView):
     # фильтрация курсов
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(courseandstudents__user_id=self.request.user.pk, courseandstudents__finish_date=None)
+        return queryset.filter(courseandstudents__user_id=self.request.user.pk, courseandstudents__finish_date__lt='1977-01-01')
 
 
 
@@ -41,15 +41,16 @@ class CoursesListCompleteView(ListView):
 
 
     # фильтрация курсов
-    def get_queryset(self):
+    # Исключить  те где дата заверщения меньше 1977 __lt
+    def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset()
-        return queryset.filter(courseandstudents__user_id=self.request.user.pk).exclude(
-            courseandstudents__finish_date=None)
+        print(self.request.user.pk)
+        return (queryset.filter(courseandstudents__user_id=self.request.user.pk).exclude(courseandstudents__finish_date__lt='1977-01-01'))
 
 
 class CoursesDetailView(DetailView):
     model = Course
     context_object_name = 'course'
     template_name = os.path.join('courses', 'courses_detail.html')
-    #extra_context = {"active_menu": "client"}
+
 
