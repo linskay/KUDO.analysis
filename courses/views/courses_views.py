@@ -4,8 +4,8 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from ..models import Course, CourseAndStudents, User
 from django.views.generic import ListView, DetailView
 from ..forms import CoursesForm
-
 import os
+
 
 class CoursesListView(ListView):
     """ Выводит список назначенных студенту курсов """
@@ -18,8 +18,7 @@ class CoursesListView(ListView):
     # фильтрация курсов
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(courseandstudents__user_id=self.request.user.pk, courseandstudents__finish_date__lt='1977-01-01')
-
+        return queryset.filter(courseandstudents__user_id=self.request.user.pk, courseandstudents__finish_date__lt='1977-01-02 00:00:00+00')
 
 
 class CoursesListAllView(ListView):
@@ -44,8 +43,7 @@ class CoursesListCompleteView(ListView):
     # Исключить  те где дата заверщения меньше 1977 __lt
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset()
-        print(self.request.user.pk)
-        return (queryset.filter(courseandstudents__user_id=self.request.user.pk).exclude(courseandstudents__finish_date__lt='1977-01-01'))
+        return (queryset.filter(courseandstudents__user_id=self.request.user.pk).exclude(courseandstudents__finish_date__lt='1977-01-02 00:00:00+00'))
 
 
 class CoursesDetailView(DetailView):

@@ -39,13 +39,16 @@ class CoursesUpdateView(UpdateView):
 
 class CoursesCreateView(CreateView):
     """ Создаем курс """
+    from services.img_crop import crop_img_center
+
     model = Course
     form_class = CoursesForm
-    #fields = ['name_course','description_course','photo_course','pay_course','students']
     context_object_name = 'course'
     template_name = os.path.join('courses', 'courses_form.html')
     success_url = reverse_lazy('courses:courses')
     # extra_context = {"active_menu": "client"}
+
+
 
 class CoursesDeleteView(DeleteView):
     """ Удаляем курс"""
