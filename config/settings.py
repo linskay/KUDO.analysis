@@ -37,7 +37,7 @@ else:
 
 # Application definition
 
-# Джанго стандарные приложения.
+# Джанго стандартные приложения.
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
